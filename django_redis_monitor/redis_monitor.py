@@ -11,7 +11,9 @@ class RedisMonitor(object):
     def _hash_and_slot(self, dt = None):
         dt = dt or datetime.datetime.utcnow()
         hash = dt.strftime('%Y%m%d:%H') # 20100709:12 = 12th hour of that day
-        slot = dt.strftime('%M%S') # 2405 for 5th second of 24th minute
+        slot = '%02d:%d' % (  # 24:3 for seconds 30-39 in minute 24
+            dt.minute, dt.second / 10
+        )
         return ('%s:%s' % (self.prefix, hash), slot)
     
     def _calculate_start(self, hours, minutes, seconds, now = None):
