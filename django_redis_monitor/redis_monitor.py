@@ -44,7 +44,10 @@ class RedisMonitor(object):
         preloaded_hashes = {}
         gathered = []
         current = start
-        while current < datetime.datetime.utcnow():
+        now = datetime.datetime.utcnow().replace(
+            second = (start.second / 10) * 10, microsecond = 0
+        )
+        while current < now:
             hash, slot = self._hash_and_slot(current)
             if hash not in preloaded_hashes:
                 preloaded_hashes[hash] = self.r.hgetall(hash)
