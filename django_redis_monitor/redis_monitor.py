@@ -41,13 +41,20 @@ class RedisMonitor(object):
         start = start.replace(
             second = (start.second / 10) * 10, microsecond = 0
         )
+        preloaded_hashes = {}
         gathered = []
         current = start
         while current < datetime.datetime.utcnow():
             hash, slot = self._hash_and_slot(current)
-            gathered.append((current, int(self.r.hget(hash, slot) or 0)))
+            if hash not in preloaded_hashes:
+                preloaded_hashes[hash] = self.r.hgetall(hash)
+            value = int(preloaded_hashes[hash].get(slot, 0))
+            gathered.append((current, value))
             current += datetime.timedelta(seconds = 10)
         return gathered
+    
+    def get_recent_hits_and_weights(self, hours = 0, minutes = 0, seconds =0):
+        pass
     
     def get_recent_hits_per_second(self, hours = 0, minutes = 0, seconds = 0):
         pass
