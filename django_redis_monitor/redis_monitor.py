@@ -36,15 +36,21 @@ class RedisMonitor(object):
         self.r.hincrby(hash, slot, num_hits)
         self.r.hincrby(hash, slot + 'd', total_weight)
     
-    def get_recent_hits_per_second(self, hours = 0, minutes = 0, seconds = 0):
+    def get_recent_hits(self, hours = 0, minutes = 0, seconds = 0):
         start = self._calculate_start(hours, minutes, seconds)
-        current = start.replace(second = int(start.second / 10))
+        start = start.replace(
+            second = (start.second / 10) * 10, microsecond = 0
+        )
         gathered = []
+        current = start
         while current < datetime.datetime.utcnow():
             hash, slot = self._hash_and_slot(current)
-            gathered.append((hash, slot, int(self.r.hget(hash, slot) or 0)))
+            gathered.append((current, int(self.r.hget(hash, slot) or 0)))
             current += datetime.timedelta(seconds = 10)
         return gathered
+    
+    def get_recent_hits_per_second(self, hours = 0, minutes = 0, seconds = 0):
+        pass
     
     def get_recent_avgs_per_second(self, hours = 0, minutes = 0, seconds = 0):
         pass
