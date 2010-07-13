@@ -23,7 +23,14 @@ Usage:
         'django_redis_monitor.middleware.RedisMonitorMiddleware',
     ) + MIDDLEWARE_CLASSES
 
-3. Hook up the monitoring view function in your urls.py:
+3. Optional step: Add redis settings to your settings.py file (otherwise 
+   the following defaults will be used):
+
+    REDIS_MONITOR_HOST = 'localhost'
+    REDIS_MONITOR_PORT = 6379
+    REDIS_MONITOR_DB = 0
+
+4. Hook up the monitoring view function in your urls.py:
 
     urlpatterns = patterns('',
         # ...
@@ -44,6 +51,6 @@ If you want the monitoring view to only be visible to super users, do this:
         ('^redis-monitor/$', requires_superuser(monitor)),
     )
 
-4. Hit your application with a bunch of requests.
+5. Hit your application with a bunch of requests.
 
-5. Go to http://localhost:8000/redis-monitor/ to see the results.
+6. Go to http://localhost:8000/redis-monitor/ to see the results.

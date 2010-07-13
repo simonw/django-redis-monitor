@@ -1,18 +1,17 @@
 from django.db.backends import BaseDatabaseWrapper
-from cursor_wrapper import monkeypatched_cursor_method
-import time
+from redis_monitor import get_instance
+import time, logging
 
 class RedisMonitorMiddleware(object):
     def process_request(self, request):
-        self.ensure_monkeypatch()
         self.start_time = time.time()
+        self.rm = get_instance('requests')
     
     def process_response(self, request, response):
         duration = time.time() - self.start_time
-        print "Request duration: %.0f" % (1000000 * duration)
+        duration_in_microseconds = int(1000000 * duration)
+        try:
+            self.rm.record_hit_with_weight(duration_in_microseconds)
+        except Exception, e:
+            logging.warn('RedisMonitor error: %s' % str(e))
         return response
-    
-    def ensure_monkeypatch(self):
-        if BaseDatabaseWrapper.cursor != monkeypatched_cursor_method:
-            BaseDatabaseWrapper.cursor_original = BaseDatabaseWrapper.cursor
-            BaseDatabaseWrapper.cursor = monkeypatched_cursor_method

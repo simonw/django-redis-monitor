@@ -8,7 +8,7 @@ class RedisMonitor(object):
         assert prefix and ' ' not in prefix, \
             'prefix (e.g. "rps") is required and must not contain spaces'
         self.prefix = prefix
-        if redis_obj is not None:
+        if redis_obj is None:
             redis_obj = redis.Redis(
                 host=redis_host, port=redis_port, db=redis_db
             )
@@ -82,3 +82,10 @@ class RedisMonitor(object):
                 yield date, 0
             else:
                 yield date, float(weight) / hits
+
+def get_instance(prefix):
+    from django.conf import settings
+    host = getattr(settings, 'REDIS_MONITOR_HOST', 'localhost')
+    port = getattr(settings, 'REDIS_MONITOR_PORT', 6379)
+    db = getattr(settings, 'REDIS_MONITOR_DB', 0)
+    return RedisMonitor(prefix, redis_host=host, redis_port=port, redis_db=db)
