@@ -95,7 +95,7 @@ class RedisMonitorTotalsOnly(RedisMonitor):
     
     def get_totals(self):
         hash = '%s:totals' % self.prefix
-        return self.r.hgetall(hash)
+        return self.r.hgetall(hash) or {}
 
 def get_instance(prefix):
     from django.conf import settings

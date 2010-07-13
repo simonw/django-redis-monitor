@@ -1,0 +1,12 @@
+<status>
+	<timing>
+		<databaseCalls>
+			<count>{{ db_count }}</count>
+			<totalTimeInMillis>{{ db_total_ms }}</totalTimeInMillis>
+		</databaseCalls>
+		<requests>
+			<count>{{ request_count }}</count>
+			<totalTimeInMillis>{{ request_total_ms }}</totalTimeInMillis>
+		</requests>
+	</timing>
+</status>

@@ -67,8 +67,12 @@ Usage:
 
     urlpatterns = patterns('',
         # ...
-        ('^redis-monitor/$', 'django_redis_monitor.views.monitor'),
+        (r'^redis-monitor/$', 'django_redis_monitor.views.monitor'),
     )
+    
+    If you plan to use the nagios reporting hook, add this as well:
+    
+        (r'^redis-monitor/nagios\.xml$', 'django_redis_monitor.views.nagios'),
     
 If you want the monitoring view to only be visible to super users, do this:
 
