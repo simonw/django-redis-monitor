@@ -30,7 +30,7 @@ def nagios(request):
     sqlops = get_instance('sqlops').get_totals()
     return render('django_redis_monitor/nagios.xml', {
         'db_count': sqlops.get('hits', 0),
-        'db_total_ms': int(sqlops.get('weight', 0)) / 1000.0,
+        'db_total_ms': int(int(sqlops.get('weight', 0)) / 1000.0),
         'request_count': requests.get('hits', 0),
-        'request_total_ms': int(requests.get('weight', 0)) / 1000.0,
+        'request_total_ms': int(int(requests.get('weight', 0)) / 1000.0),
     })
