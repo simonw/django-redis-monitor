@@ -39,7 +39,12 @@ Usage:
     REDIS_MONITOR_PORT = 6379
     REDIS_MONITOR_DB = 0
 
-4. Hook up the monitoring view function in your urls.py:
+4. Add 'django_redis_monitor' to your INSTALLED_APPS setting so Django can 
+   find the correct template for the monitor view. Alternatively, copy the 
+   monitor.html template in to a django_redis_monitor directory in your 
+   existing templates/ directory.
+
+5. Hook up the monitoring view function in your urls.py:
 
     urlpatterns = patterns('',
         # ...
@@ -60,6 +65,6 @@ If you want the monitoring view to only be visible to super users, do this:
         ('^redis-monitor/$', requires_superuser(monitor)),
     )
 
-5. Hit your application with a bunch of requests.
+6. Hit your application with a bunch of requests.
 
-6. Go to http://localhost:8000/redis-monitor/ to see the results.
+7. Go to http://localhost:8000/redis-monitor/ to see the results.

@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+	"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+	<title>Monitoring</title>
+	<style type="text/css">
+	body {
+		font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	}
+	th {
+		text-align: left;
+		border-bottom: 2px solid black;
+	}
+	td.num {
+		text-align: right;
+	}
+	.col {
+		width: 45%;
+		margin-right: 3%;
+		float: left;
+	}
+	</style>
+</head>
+<body>
+<h1>Monitoring</h1>
+
+<div class="col">
+	<h2>Requests per second (for 10 second buckets):</h2>
+	<table>
+		<tr>
+			<th>Time</th><th>Reqs in 10 secs</th><th>Reqs/second</th>
+			<th>Total req duration</th><th>Avg duration per req</th>
+		</tr>
+		{% for obj in requests %}
+		<tr>
+			<td>{{ obj.0|date:"H:i:s" }}</td>
+			<td>TODO</td>
+			<td class="num">{{ obj.1|floatformat:"3" }}</td>
+			<td>TODO</td><td>TODO</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+
+<div class="col">
+	<h2>SQLops per second (for 10 second buckets):</h2>
+	<table>
+		<tr>
+			<th>Time</th><th>SQLops/second</th>
+		</tr>
+		{% for obj in sqlops %}
+		<tr>
+			<td>{{ obj.0|date:"H:i:s" }}</td>
+			<td class="num">{{ obj.1|floatformat:"3" }}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+</body>
+</html>
