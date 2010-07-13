@@ -32,19 +32,23 @@ Usage:
         'django_redis_monitor.middleware.RedisMonitorMiddleware',
     ) + MIDDLEWARE_CLASSES
 
-3. Optional step: Add redis settings to your settings.py file (otherwise 
+3. Set your DATABASE_ENGINE setting to 'django_redis_monitor.sqlite3_backend'
+   or 'django_redis_monitor.postgresql_psycopg2_backend' so your SQL queries
+   can be intercepted and counted.
+
+4. Optional step: Add redis settings to your settings.py file (otherwise 
    the following defaults will be used):
 
     REDIS_MONITOR_HOST = 'localhost'
     REDIS_MONITOR_PORT = 6379
     REDIS_MONITOR_DB = 0
 
-4. Add 'django_redis_monitor' to your INSTALLED_APPS setting so Django can 
+5. Add 'django_redis_monitor' to your INSTALLED_APPS setting so Django can 
    find the correct template for the monitor view. Alternatively, copy the 
    monitor.html template in to a django_redis_monitor directory in your 
    existing templates/ directory.
 
-5. Hook up the monitoring view function in your urls.py:
+6. Hook up the monitoring view function in your urls.py:
 
     urlpatterns = patterns('',
         # ...
@@ -65,6 +69,6 @@ If you want the monitoring view to only be visible to super users, do this:
         ('^redis-monitor/$', requires_superuser(monitor)),
     )
 
-6. Hit your application with a bunch of requests.
+7. Hit your application with a bunch of requests.
 
-7. Go to http://localhost:8000/redis-monitor/ to see the results.
+8. Go to http://localhost:8000/redis-monitor/ to see the results.
