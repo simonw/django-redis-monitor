@@ -6,7 +6,7 @@ from redis_monitor import get_instance
 def monitor(request):
     requests = get_instance('requests')
     sqlops = get_instance('sqlops')
-    if settings.REDIS_MONITOR_ONLY_TRACK_TOTALS:
+    if getattr(settings, 'REDIS_MONITOR_ONLY_TRACK_TOTALS', False):
         return render('django_redis_monitor/monitor_totals_only.html', {
             'requests': requests.get_totals(),
             'sqlops': sqlops.get_totals(),
@@ -22,7 +22,7 @@ def monitor(request):
         })
 
 def nagios(request):
-    if not settings.REDIS_MONITOR_ONLY_TRACK_TOTALS:
+    if not getattr(settings, 'REDIS_MONITOR_ONLY_TRACK_TOTALS', False):
         return HttpResponse(
             'nagios only available in REDIS_MONITOR_ONLY_TRACK_TOTALS mode'
         )
