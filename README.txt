@@ -56,7 +56,14 @@ Usage:
    monitor.html template in to a django_redis_monitor directory in your 
    existing templates/ directory.
 
-6. Hook up the monitoring view function in your urls.py:
+7. By default, django_redis_monitor records statistics over time in to 
+   separate buckets. If you are using an external monitoring tool such as 
+   Nagios you may only need to report the total number or duration of requests
+   since counting began. If so, you can add the following setting:
+   
+   REDIS_MONITOR_ONLY_TRACK_TOTALS = True
+
+8. Hook up the monitoring view function in your urls.py:
 
     urlpatterns = patterns('',
         # ...
@@ -77,6 +84,6 @@ If you want the monitoring view to only be visible to super users, do this:
         ('^redis-monitor/$', requires_superuser(monitor)),
     )
 
-7. Hit your application with a bunch of requests.
+9. Hit your application with a bunch of requests.
 
-8. Go to http://localhost:8000/redis-monitor/ to see the results.
+10. Go to http://localhost:8000/redis-monitor/ to see the results.

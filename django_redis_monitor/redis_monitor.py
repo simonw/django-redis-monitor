@@ -83,9 +83,30 @@ class RedisMonitor(object):
             else:
                 yield date, float(weight) / hits
 
+class RedisMonitorTotalsOnly(RedisMonitor):
+    
+    def record_hits_with_total_weight(self, num_hits, total_weight):
+        hash = '%s:totals' % self.prefix
+        self.r.hincrby(hash, 'hits', num_hits)
+        self.r.hincrby(hash, 'weight', total_weight)
+    
+    def get_recent_hits_and_weights(self, *args, **kwargs):
+        raise NotImplemented, 'REDIS_MONITOR_ONLY_TRACK_TOTALS mode'
+    
+    def get_totals(self):
+        hash = '%s:totals' % self.prefix
+        return self.r.hgetall(hash)
+
 def get_instance(prefix):
     from django.conf import settings
     host = getattr(settings, 'REDIS_MONITOR_HOST', 'localhost')
     port = getattr(settings, 'REDIS_MONITOR_PORT', 6379)
     db = getattr(settings, 'REDIS_MONITOR_DB', 0)
-    return RedisMonitor(prefix, redis_host=host, redis_port=port, redis_db=db)
+    only_track_totals = getattr(
+        settings, 'REDIS_MONITOR_ONLY_TRACK_TOTALS', False
+    )
+    if only_track_totals:
+        klass = RedisMonitorTotalsOnly
+    else:
+        klass = RedisMonitor
+    return klass(prefix, redis_host=host, redis_port=port, redis_db=db)
