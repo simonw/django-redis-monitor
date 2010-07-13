@@ -34,9 +34,16 @@ class RedisMonitor(object):
     def record_hits_with_total_weight(self, num_hits, total_weight):
         hash, slot = self._hash_and_slot()
         self.r.hincrby(hash, slot, num_hits)
-        self.r.hincrby(hash, slot + 'd', total_weight)
+        self.r.hincrby(hash, slot + 'w', total_weight)
     
     def get_recent_hits(self, hours = 0, minutes = 0, seconds = 0):
+        gathered = self.get_recent_hits_and_weights(hours, minutes, seconds)
+        for date, hits, weight in gathered:
+            yield date, hits
+    
+    def get_recent_hits_and_weights(
+            self, hours = 0, minutes = 0, seconds = 0
+        ):
         start = self._calculate_start(hours, minutes, seconds)
         start = start.replace(
             second = (start.second / 10) * 10, microsecond = 0
@@ -51,22 +58,21 @@ class RedisMonitor(object):
             hash, slot = self._hash_and_slot(current)
             if hash not in preloaded_hashes:
                 preloaded_hashes[hash] = self.r.hgetall(hash)
-            value = int(preloaded_hashes[hash].get(slot, 0))
-            gathered.append((current, value))
+            hits = int(preloaded_hashes[hash].get(slot, 0))
+            weight = int(preloaded_hashes[hash].get(slot + 'w', 0))
+            gathered.append((current, hits, weight))
             current += datetime.timedelta(seconds = 10)
         return gathered
     
-    def get_recent_hits_and_weights(self, hours = 0, minutes = 0, seconds =0):
-        pass
-    
     def get_recent_hits_per_second(self, hours = 0, minutes = 0, seconds = 0):
-        pass
+        gathered = self.get_recent_hits(hours, minutes, seconds)
+        for date, hits in gathered:
+            yield date, hits / 10.0
     
-    def get_recent_avgs_per_second(self, hours = 0, minutes = 0, seconds = 0):
-        pass
-    
-    def get_recent_hits_per_minute(self, hours = 0, minutes = 0, seconds = 0):
-        pass
-    
-    def get_recent_avgs_per_minute(self, hours = 0, minutes = 0, seconds = 0):
-        pass
+    def get_recent_avg_weights(self, hours = 0, minutes = 0, seconds = 0):
+        gathered = self.get_recent_hits_and_weights(hours, minutes, seconds)
+        for date, hits, weight in gathered:
+            if weight == 0 or hits == 0:
+                yield date, 0
+            else:
+                yield date, float(weight) / hits
