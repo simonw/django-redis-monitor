@@ -2,11 +2,17 @@ import datetime # we use utcnow to insulate against daylight savings errors
 import redis
 
 class RedisMonitor(object):
-    def __init__(self, prefix=''):
+    def __init__(self, prefix='', redis_obj=None, redis_host='localhost', 
+            redis_port=6379, redis_db=0
+        ):
         assert prefix and ' ' not in prefix, \
             'prefix (e.g. "rps") is required and must not contain spaces'
         self.prefix = prefix
-        self.r = redis.Redis()
+        if redis_obj is not None:
+            redis_obj = redis.Redis(
+                host=redis_host, port=redis_port, db=redis_db
+            )
+        self.r = redis_obj
     
     def _hash_and_slot(self, dt = None):
         dt = dt or datetime.datetime.utcnow()
