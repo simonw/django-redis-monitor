@@ -10,6 +10,15 @@ on space. Only results from previous complete buckets are returned, so it can
 take up to 10 seconds for a hit to be registered in the hits-per-second 
 metrics.
 
+Installation:
+-------------
+
+You will need to install and run a Redis server using a recent version of 
+Redis (one that supports the HINCRBY and HGETALL commands). Redis 2.0.0 or 
+higher should be fine.
+
+You will also need redis-py from http://github.com/andymccurdy/redis-py/
+
 Usage:
 ------
 
