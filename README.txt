@@ -36,15 +36,16 @@ Usage:
     ) + MIDDLEWARE_CLASSES
 
 3. Set your DATABASE_ENGINE setting to 'django_redis_monitor.sqlite3_backend'
-   or 'django_redis_monitor.postgresql_psycopg2_backend' so your SQL queries
-   can be intercepted and counted.
+   or 'django_redis_monitor.postgresql_psycopg2_backend' or 
+   'django_redis_monitor.mysql_backend' so your SQL queries can be 
+   intercepted and counted.
    
    If you are using South for migrations, you will also need to add a 
    corresponding SOUTH_DATABASE_ADAPTERS setting:
    
    SOUTH_DATABASE_ADAPTERS = {
        'default': 'south.db.postgresql_psycopg2',
-                  # Or 'south.db.sqlite3'
+                  # Or 'south.db.sqlite3' or 'south.db.mysql'
    }
 
 4. Optional step: Add redis settings to your settings.py file (otherwise 
