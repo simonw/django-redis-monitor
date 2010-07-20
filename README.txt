@@ -17,7 +17,10 @@ You will need to install and run a Redis server using a recent version of
 Redis (one that supports the HINCRBY and HGETALL commands). Redis 2.0.0 or 
 higher should be fine.
 
-You will also need redis-py from http://github.com/andymccurdy/redis-py/
+You will also need redis-py from http://github.com/andymccurdy/redis-py/ - 
+you can pip install the latest version like so:
+
+    pip install http://github.com/andymccurdy/redis-py/tarball/master
 
 Usage:
 ------
