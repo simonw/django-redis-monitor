@@ -95,3 +95,14 @@ If you want the monitoring view to only be visible to super users, do this:
 9. Hit your application with a bunch of requests.
 
 10. Go to http://localhost:8000/redis-monitor/ to see the results.
+
+11. If you want to ignore requests to certain URLs (the redis-monitor view
+    for example) you can add an optional REDIS_MONITOR_REQUEST_BLACKLIST
+    setting. This can contain either strings or regular expressions:
+    
+    import re
+    REDIS_MONITOR_REQUEST_BLACKLIST = (
+        '/favicon.ico',
+        '/redis-monitor/nagios.xml',
+        re.compile('^/static/'),
+    )

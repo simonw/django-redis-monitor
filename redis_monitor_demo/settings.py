@@ -54,3 +54,10 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django_redis_monitor', # For its templates directory
 )
+
+import re
+REDIS_MONITOR_REQUEST_BLACKLIST = (
+    '/favicon.ico',
+    '/redis-monitor/',
+    re.compile('^/static/'),
+)
