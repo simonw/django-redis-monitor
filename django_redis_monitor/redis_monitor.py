@@ -99,6 +99,7 @@ class RedisMonitorTotalsOnly(RedisMonitor):
 
 def get_instance(prefix):
     from django.conf import settings
+    from django.core import signals
     host = getattr(settings, 'REDIS_MONITOR_HOST', 'localhost')
     port = getattr(settings, 'REDIS_MONITOR_PORT', 6379)
     db = getattr(settings, 'REDIS_MONITOR_DB', 0)
@@ -109,4 +110,10 @@ def get_instance(prefix):
         klass = RedisMonitorTotalsOnly
     else:
         klass = RedisMonitor
-    return klass(prefix, redis_host=host, redis_port=port, redis_db=db)
+    obj = klass(prefix, redis_host=host, redis_port=port, redis_db=db)
+    # Ensure we disconnect at the end of the request cycle
+    signals.request_finished.connect(
+        lambda **kwargs: obj.r.connection.disconnect()
+    )
+    return obj
+
